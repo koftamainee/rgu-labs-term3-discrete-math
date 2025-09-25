@@ -1,0 +1,19 @@
+new A
+new B
+add A a
+add A c
+add A b
+add B b
+add B d
+see
+see A
+A + B
+A & B
+A - B
+A < B
+A = B
+pow A
+rem A b
+see A
+del B
+see
