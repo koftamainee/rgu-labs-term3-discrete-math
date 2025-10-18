@@ -7,6 +7,9 @@ pub struct Relation {
     base: Set,
     matrix: Vec<Vec<u64>>,                   // bit-set vectors
     index_map: Option<HashMap<char, usize>>, // if n > 128, check index_of()
+
+    is_full: bool,
+    is_empty: bool,
 }
 
 impl Relation {
@@ -19,6 +22,8 @@ impl Relation {
             base,
             matrix,
             index_map: None,
+            is_full: false,
+            is_empty: false,
         };
 
         if n > 128 {
@@ -31,7 +36,59 @@ impl Relation {
             }
         }
 
+        rel.update_flags();
+
         rel
+    }
+
+    fn update_flags(&mut self) {
+        let n = self.matrix.len();
+        if n == 0 {
+            self.is_empty = true;
+            self.is_full = false;
+            return;
+        }
+
+        let bits_per_row = n;
+        let full_chunks = bits_per_row / 64;
+        let leftover_bits = bits_per_row % 64;
+
+        let mut is_full = true;
+        let mut is_empty = true;
+
+        for row in &self.matrix {
+            for &chunk in row.iter().take(full_chunks) {
+                if chunk != u64::MAX {
+                    is_full = false;
+                }
+                if chunk != 0 {
+                    is_empty = false;
+                }
+            }
+
+            if leftover_bits > 0 {
+                if let Some(&last_chunk) = row.get(full_chunks) {
+                    let mask = if leftover_bits == 64 {
+                        u64::MAX
+                    } else {
+                        (1u64 << leftover_bits) - 1
+                    };
+                    if last_chunk & mask != mask {
+                        is_full = false;
+                    }
+                    if last_chunk & mask != 0 {
+                        is_empty = false;
+                    }
+                }
+            }
+
+            if !is_full && !is_empty {
+                break;
+            }
+        }
+
+        self.is_full = is_full;
+        self.is_empty = is_empty;
     }
 
     #[inline]
@@ -65,7 +122,14 @@ impl Relation {
 
     #[inline]
     pub fn contains(&self, a: char, b: char) -> bool {
+        if self.is_empty {
+            return false;
+        }
+
         if let (Some(i), Some(j)) = (self.index_of(a), self.index_of(b)) {
+            if self.is_full {
+                return true;
+            }
             self.get_pair(i, j)
         } else {
             false
@@ -74,50 +138,98 @@ impl Relation {
 
     #[inline]
     pub fn is_reflexive(&self) -> bool {
+        if self.is_full {
+            return true;
+        }
+        if self.is_empty {
+            return false;
+        }
+
         self.base.iter().all(|&c| self.contains(c, c))
     }
 
     #[inline]
     pub fn is_irreflexive(&self) -> bool {
+        if self.is_empty {
+            return true;
+        }
+        if self.is_full {
+            return false;
+        }
+
         self.base.iter().all(|&c| !self.contains(c, c))
     }
 
-    #[inline]
     pub fn is_symmetric(&self) -> bool {
-        self.base.iter().all(|&a| {
-            self.base
-                .iter()
-                .all(|&b| !self.contains(a, b) || self.contains(b, a))
-        })
+        if self.is_full || self.is_empty {
+            return true;
+        }
+
+        let n = self.matrix.len();
+        for i in 0..n {
+            for j in i + 1..n {
+                if self.get_pair(i, j) != self.get_pair(j, i) {
+                    return false;
+                }
+            }
+        }
+        true
     }
 
-    #[inline]
     pub fn is_antisymmetric(&self) -> bool {
-        !self.base.iter().any(|&a| {
-            self.base
-                .iter()
-                .any(|&b| a != b && self.contains(a, b) && self.contains(b, a))
-        })
+        if self.is_empty {
+            return true;
+        }
+        if self.is_full {
+            return false;
+        }
+
+        let n = self.matrix.len();
+        for i in 0..n {
+            for j in i + 1..n {
+                if self.get_pair(i, j) && self.get_pair(j, i) {
+                    return false;
+                }
+            }
+        }
+        true
     }
 
-    #[inline]
     pub fn is_asymmetric(&self) -> bool {
-        self.base.iter().all(|&a| {
-            self.base
-                .iter()
-                .all(|&b| !(self.contains(a, b) && self.contains(b, a)))
-        })
+        if self.is_empty {
+            return true;
+        }
+        if self.is_full {
+            return false;
+        }
+
+        self.is_irreflexive() && self.is_antisymmetric()
     }
 
     #[inline]
     pub fn is_transitive(&self) -> bool {
-        self.base.iter().all(|&a| {
-            self.base.iter().all(|&b| {
-                self.base
-                    .iter()
-                    .all(|&c| !(self.contains(a, b) && self.contains(b, c)) || self.contains(a, c))
-            })
-        })
+        if self.is_empty || self.is_full {
+            return true;
+        }
+
+        let n = self.matrix.len();
+        let words_per_row = self.matrix[0].len();
+
+        for i in 0..n {
+            for j in 0..n {
+                if self.get_pair(i, j) {
+                    // For all k, if R[j][k] == 1 then R[i][k] must also be 1
+                    for w in 0..words_per_row {
+                        let aj = self.matrix[j][w];
+                        let ai = self.matrix[i][w];
+                        if (aj & !ai) != 0 {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        true
     }
 
     #[inline]
@@ -161,7 +273,7 @@ impl Relation {
         let mut visited = Set::new();
 
         for &a in &self.base {
-            if visited.iter().any(|&x| x == a) {
+            if visited.contains(a) {
                 continue;
             }
 
