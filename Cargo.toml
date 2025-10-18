@@ -1,0 +1,11 @@
+[package]
+name = "rgu-labs-term3-discrete-math"
+version = "0.1.0"
+edition = "2024"
+
+
+[profile.release]
+debug = true
+
+[dependencies]
+rayon = "1.11.0"
