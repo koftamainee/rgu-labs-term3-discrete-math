@@ -1,5 +1,6 @@
 import random
 import string
+import argparse
 
 
 def generate_relation(file_path: str, n: int = 1000, density: float = 0.02):
@@ -7,7 +8,7 @@ def generate_relation(file_path: str, n: int = 1000, density: float = 0.02):
     Generate a large relation test file using only non-space symbols.
 
     Parameters:
-        file_path: output file name (e.g., "relation_big.txt")
+        file_path: output file name (e.g., "files/relation_big.txt")
         n: number of elements in the base set
         density: fraction of possible pairs to include (0.0–1.0)
     """
@@ -33,5 +34,35 @@ def generate_relation(file_path: str, n: int = 1000, density: float = 0.02):
     print(f"✅ Generated {file_path} with n={n}, density={density}, symbols only")
 
 
+def main():
+    parser = argparse.ArgumentParser(
+        description="Generate a random relation test file for discrete math experiments."
+    )
+    parser.add_argument(
+        "-o",
+        "--output",
+        type=str,
+        default="files/relation_big.txt",
+        help="Output file path (default: files/relation_big.txt)",
+    )
+    parser.add_argument(
+        "-n",
+        "--num",
+        type=int,
+        default=1000,
+        help="Number of elements in the set (default: 1000)",
+    )
+    parser.add_argument(
+        "-d",
+        "--density",
+        type=float,
+        default=0.02,
+        help="Fraction of possible pairs to include (0.0–1.0, default: 0.02)",
+    )
+
+    args = parser.parse_args()
+    generate_relation(args.output, args.num, args.density)
+
+
 if __name__ == "__main__":
-    generate_relation("files/relations_big.txt", n=10000, density=0.52)
+    main()
