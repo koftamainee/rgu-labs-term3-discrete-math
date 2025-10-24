@@ -1,3 +1,6 @@
 /target
-/files/relations_big.txt
-/files/sets_big.txt
+/files/relations/big.txt
+/files/sets/big.txt
+perf.data
+perf.data.old
+flamegraph.svg

@@ -38,7 +38,7 @@ echo "===================================="
 
 BIG_FILE="files/relations/big.txt"
 
-python3 generators/relations.py -o "$BIG_FILE" -n 10000 -d 0.99
+# python3 generators/relations.py -o "$BIG_FILE" -n 10000 -d 0.99
 
 echo
 echo "🏃 Running program on large relation (timed + profiled)..."
@@ -82,8 +82,8 @@ if command -v perf &>/dev/null; then
 
 fi
 
-rm -f "$BIG_FILE"
-echo "🧹 Deleted $BIG_FILE"
+# rm -f "$BIG_FILE"
+# echo "🧹 Deleted $BIG_FILE"
 
 echo
 echo "✅ All tests and profiling completed successfully."

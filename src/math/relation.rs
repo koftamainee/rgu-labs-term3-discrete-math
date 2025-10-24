@@ -218,7 +218,6 @@ impl Relation {
         for i in 0..n {
             for j in 0..n {
                 if self.get_pair(i, j) {
-                    // For all k, if R[j][k] == 1 then R[i][k] must also be 1
                     for w in 0..words_per_row {
                         let aj = self.matrix[j][w];
                         let ai = self.matrix[i][w];
