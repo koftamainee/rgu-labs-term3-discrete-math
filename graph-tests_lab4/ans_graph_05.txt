@@ -1,0 +1,23 @@
+1. Graph is directed.
+
+2. deg_in = [5, 4, 5, 4, 2, 1, 4, 4, 5, 1, 7, 2]
+   deg_out = [4, 2, 3, 4, 2, 5, 5, 5, 2, 5, 4, 3].
+
+Digraph is connected
+4. Weakly connected components:
+[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+
+5. Strongly connected components:
+[12, 6, 2, 9, 11, 1, 10, 5, 3, 8, 4, 7]
+
+7. Distancies and shortest paths.
+from 1 to 12
+path 1-7-8-12 (130)
+from 12 to 3
+path 12-3 (4)
+from 3 to 12
+path 3-8-12 (84)
+from 7 to 1
+path 7-11-1 (74)
+from 1 to 7
+path 1-7 (28)

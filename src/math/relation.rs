@@ -66,19 +66,19 @@ impl Relation {
                 }
             }
 
-            if leftover_bits > 0 {
-                if let Some(&last_chunk) = row.get(full_chunks) {
-                    let mask = if leftover_bits == 64 {
-                        u64::MAX
-                    } else {
-                        (1u64 << leftover_bits) - 1
-                    };
-                    if last_chunk & mask != mask {
-                        is_full = false;
-                    }
-                    if last_chunk & mask != 0 {
-                        is_empty = false;
-                    }
+            if leftover_bits > 0
+                && let Some(&last_chunk) = row.get(full_chunks)
+            {
+                let mask = if leftover_bits == 64 {
+                    u64::MAX
+                } else {
+                    (1u64 << leftover_bits) - 1
+                };
+                if last_chunk & mask != mask {
+                    is_full = false;
+                }
+                if last_chunk & mask != 0 {
+                    is_empty = false;
                 }
             }
 

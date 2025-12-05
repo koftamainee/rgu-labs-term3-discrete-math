@@ -1,0 +1,26 @@
+1. Graph is directed.
+
+2. deg_in = [1, 0, 2, 2, 2, 2]
+   deg_out = [1, 1, 1, 2, 2, 2].
+
+Digraph is not connected
+4. Weakly connected components:
+[4, 5, 6]
+[1, 2, 3]
+
+5. Strongly connected components:
+[1, 3]
+[6, 4, 5]
+[2]
+
+7. Distancies and shortest paths.
+from 1 to 6
+no path (+Infinity)
+from 3 to 5
+no path (+Infinity)
+from 5 to 3
+no path (+Infinity)
+from 5 to 1
+no path (+Infinity)
+from 1 to 5
+no path (+Infinity)

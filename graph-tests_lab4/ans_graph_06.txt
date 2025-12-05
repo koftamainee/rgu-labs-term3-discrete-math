@@ -1,0 +1,21 @@
+1. Graph is undirected.
+
+2. deg = [4, 2, 4, 3, 4, 9, 8, 3, 4, 4, 5, 2, 6, 3, 5].
+
+Graph is not connected
+3. Connected components:
+[1, 5, 6, 7, 9, 10, 11, 13, 14, 15]
+[2, 3, 4, 8, 12]
+
+6. D = +Infinity	 Z = [4, 2, 8, 3, 12, 10, 7, 13, 15, 9, 14, 1, 5, 11, 6]
+   R = +Infinity	 P = [4, 2, 8, 3, 12, 10, 7, 13, 15, 9, 14, 1, 5, 11, 6]
+
+7. Distancies and shortest paths.
+from 1 to 15
+path 1-6-15 (51)
+from 11 to 14
+path 11-5-7-14 (113)
+from 12 to 6
+no path (+Infinity)
+from 2 to 5
+no path (+Infinity)

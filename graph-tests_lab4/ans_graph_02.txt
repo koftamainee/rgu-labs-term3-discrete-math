@@ -1,0 +1,20 @@
+1. Graph is undirected.
+
+2. deg = [3, 6, 3, 4, 4, 3, 3].
+
+Graph is connected
+3. Connected components:
+[1, 2, 3, 4, 5, 6, 7]
+
+6. D = 91	 Z = [2]
+   R = 75	 P = [3, 1]
+
+7. Distancies and shortest paths.
+from 1 to 7
+path 1-6-7 (71)
+from 6 to 1
+path 6-1 (40)
+from 2 to 1
+path 2-1 (45)
+from 3 to 1
+path 3-5-4-1 (91)
