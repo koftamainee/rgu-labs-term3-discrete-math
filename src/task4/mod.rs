@@ -90,7 +90,8 @@ pub fn format_text(results: &GraphResults) -> String {
             results.deg_in, results.deg_out
         ));
     } else {
-        let deg: Vec<usize> = results.deg_out.clone();
+        let mut deg: Vec<usize> = results.deg_out.clone();
+        deg.iter_mut().for_each(|elem| *elem /= 2);
         s.push_str(&format!("2. deg = {:?}\n\n", deg));
     }
 
